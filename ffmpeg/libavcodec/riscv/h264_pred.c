@@ -491,6 +491,7 @@ void pred16x16_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 {
     uint8_t *p_src_iter = p_src;
 
+    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
     vuint8m1_t left = vlse8_v_u8m1(p_src_iter - 1, stride, 16);
     vuint8m1_t top = vle8_v_u8m1(p_src_iter - stride, 16);
 
@@ -499,129 +500,131 @@ void pred16x16_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
     sum = vwredsumu_vs_u8m1_u16m1(sum, left, sum, 16);
     sum = vwredsumu_vs_u8m1_u16m1(sum, top, sum, 16);
 
-    vuint8mf2_t sum_n = vnclipu_wx_u8mf2(sum, 5, 16);
-    vuint8mf2_t dc_splat = vrgather_vx_u8mf2(sum_n, 0, 16);
+    vuint16m1_t sum_n = vssrl_vx_u16m1(sum, 5, 8);
+    vuint8m1_t dc_splat = vrgather_vx_u8m1(vreinterpret_v_u16m1_u8m1(sum_n), 0, 16);
 
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);    
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);    
 }
 
 void pred16x16_left_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 {
     uint8_t *p_src_iter = p_src;
-    vuint8mf2_t left = vlse8_v_u8mf2(p_src_iter - 1, stride, 16);
+
+    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
+    vuint8m1_t left = vlse8_v_u8m1(p_src_iter - 1, stride, 16);
 
     vuint16m1_t sum = vand_vx_u16m1(sum, 0, 16);
-    sum = vwredsumu_vs_u8mf2_u16m1(sum, left, sum, 16);
+    sum = vwredsumu_vs_u8m1_u16m1(sum, left, sum, 16);
 
-    vuint8mf2_t dc = vnclipu_wx_u8mf2(sum, 4, 16);
-    vuint8mf2_t dc_splat = vrgather_vx_u8mf2(dc, 0, 16);
+    vuint16m1_t dc = vssrl_vx_u16m1(sum, 4, 8);
+    vuint8m1_t dc_splat = vrgather_vx_u8m1(vreinterpret_v_u16m1_u8m1(dc), 0, 16);
 
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
 }
 
 void pred16x16_top_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 {
     uint8_t *p_src_iter = p_src;
-
-    vuint8mf2_t top = vle8_v_u8mf2(p_src_iter - stride, 16);
+    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
+    vuint8m1_t top = vle8_v_u8m1(p_src_iter - stride, 16);
 
     vuint16m1_t sum = vand_vx_u16m1(sum, 0, 16);
-    sum = vwredsumu_vs_u8mf2_u16m1(sum, top, sum, 16);
+    sum = vwredsumu_vs_u8m1_u16m1(sum, top, sum, 16);
 
-    vuint8mf2_t dc = vnclipu_wx_u8mf2(sum, 4, 16);
-    vuint8mf2_t dc_splat = vrgather_vx_u8mf2(dc, 0, 16);
+    vuint16m1_t dc = vssrl_vx_u16m1(sum, 4, 8);
+    vuint8m1_t dc_splat = vrgather_vx_u8m1(vreinterpret_v_u16m1_u8m1(dc), 0, 16);
 
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
     p_src_iter += stride;
-    vse8_v_u8mf2(p_src_iter, dc_splat, 16);
+    vse8_v_u8m1(p_src_iter, dc_splat, 16);
 }
 
 void pred16x16_128_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)

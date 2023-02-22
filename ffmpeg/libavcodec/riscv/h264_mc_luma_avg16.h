@@ -267,6 +267,7 @@ __attribute__((always_inline)) static void avg_h264_qpel16_hv_lowpass(uint8_t *p
 __attribute__((always_inline)) static void avg_h264_qpel16_hv_lowpass_l2(uint8_t *p_dst, const uint8_t *p_src, uint8_t *p_l2_src, ptrdiff_t stride, ptrdiff_t l2_stride)
 {
     const uint8_t *p_src_iter = p_src;
+    const uint8_t *p_l2_src_iter = p_l2_src;
     uint8_t *p_dst_iter = p_dst;
     int len = 16;
 
@@ -274,6 +275,7 @@ __attribute__((always_inline)) static void avg_h264_qpel16_hv_lowpass_l2(uint8_t
     {
         int vl = vsetvl_e8mf2(len);
         const uint8_t *p_src_begin = p_src_iter;
+        const uint8_t *p_l2_src_begin = p_l2_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         p_src_iter -= (stride << 1);
@@ -294,19 +296,19 @@ __attribute__((always_inline)) static void avg_h264_qpel16_hv_lowpass_l2(uint8_t
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row0, &h_row1, &h_row2, &h_row3, &h_row4, &h_row5, &h_row6, stride, vl);        
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row2, &h_row3, &h_row4, &h_row5, &h_row6, &h_row7, &h_row8, stride, vl);        
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row4, &h_row5, &h_row6, &h_row7, &h_row8, &h_row9, &h_row10, stride, vl);
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row6, &h_row7, &h_row8, &h_row9, &h_row10, &h_row11, &h_row12, stride, vl);
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         vint16m1_t h_row14, h_row15, h_row16, h_row17, h_row18, h_row19, h_row20, h_row21;
         h_lowpass_i16m1(&h_row14, &h_row15, &p_src_iter, stride, vl);
@@ -316,22 +318,23 @@ __attribute__((always_inline)) static void avg_h264_qpel16_hv_lowpass_l2(uint8_t
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row8, &h_row9, &h_row10, &h_row11, &h_row12, &h_row13, &h_row14, stride, vl);
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row10, &h_row11, &h_row12, &h_row13, &h_row14, &h_row15, &h_row16, stride, vl);
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row12, &h_row13, &h_row14, &h_row15, &h_row16, &h_row17, &h_row18, stride, vl);
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row14, &h_row15, &h_row16, &h_row17, &h_row18, &h_row19, &h_row20, stride, vl);
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        avg_average_l2(&p_dst_iter, &p_l2_src, stride, l2_stride, dst0_u8, dst1_u8, vl);
+        avg_average_l2(&p_dst_iter, &p_l2_src_iter, stride, l2_stride, dst0_u8, dst1_u8, vl);
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
+        p_l2_src_iter = p_l2_src_begin + vl;
         len -= vl;
     }
 }
@@ -504,6 +507,7 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass(uint8_t *p_
 __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t *p_dst, const uint8_t *p_src, const uint8_t *p_l2_src, int stride, int l2_stride)
 {
     const uint8_t *p_src_iter = p_src;
+    const uint8_t *p_l2_src_iter = p_l2_src;
     uint8_t *p_dst_iter = p_dst;
     int len = 16;
 
@@ -511,6 +515,7 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
     {
         int vl = vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
+        const uint8_t *p_l2_src_begin = p_l2_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         p_src_iter -= (stride * 2);
@@ -530,10 +535,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         vuint8m1_t row6 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
         
-        vuint8m1_t l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        vuint8m1_t l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        vuint8m1_t l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        vuint8m1_t l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         vuint8m1_t dst0, dst1; 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
@@ -555,10 +560,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row1 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -579,10 +584,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row3 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -603,10 +608,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row5 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -627,10 +632,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row0 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row1, row2, row3, row4, row5, row6, row0, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -651,10 +656,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row2 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row3, row4, row5, row6, row0, row1, row2, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -675,10 +680,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row4 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row5, row6, row0, row1, row2, row3, row4, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -699,10 +704,10 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
         row6 = vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src, vl);
-        p_l2_src += l2_stride;
+        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
+        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
         dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
@@ -718,6 +723,7 @@ __attribute__((always_inline)) static void avg_h264_qpel16_v_lowpass_l2(uint8_t 
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
+        p_l2_src_iter = p_l2_src_begin + vl;
         len -= vl;        
     }
 }

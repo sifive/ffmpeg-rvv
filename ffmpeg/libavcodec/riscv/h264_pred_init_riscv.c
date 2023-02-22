@@ -34,9 +34,6 @@ static av_cold void h264_pred_init_riscv(H264PredContext *h, int codec_id,
         h->pred16x16[LEFT_DC_PRED8x8] = pred16x16_left_dc_8_rvv;
         h->pred16x16[TOP_DC_PRED8x8 ] = pred16x16_top_dc_8_rvv;
         h->pred16x16[DC_128_PRED8x8 ] = pred16x16_128_dc_8_rvv;
-        if (codec_id != AV_CODEC_ID_SVQ3 && codec_id != AV_CODEC_ID_RV40 &&
-            codec_id != AV_CODEC_ID_VP7 && codec_id != AV_CODEC_ID_VP8)
-            h->pred16x16[PLANE_PRED8x8  ] = pred16x16_plane_8_rvv;
     }
 #endif
 }

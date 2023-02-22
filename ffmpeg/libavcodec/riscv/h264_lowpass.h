@@ -59,20 +59,20 @@ __attribute__((always_inline)) static void v_lowpass_u32m2(vuint32m2_t *p_dst0, 
 
 __attribute__((always_inline)) static void h_lowpass_i16m1(vint16m1_t *p_dst0, vint16m1_t *p_dst1, const uint8_t **pp_src, ptrdiff_t stride, int vl)
 {
-    vuint8mf2_t row00 = vle8_v_u8mf2(*pp_src - 2, vl + 5);
-    vuint8mf2_t row01 = vslidedown_vx_u8mf2(row01, row00, 1, vl + 5);
-    vuint8mf2_t row02 = vslidedown_vx_u8mf2(row02, row00, 2, vl + 5);
-    vuint8mf2_t row03 = vslidedown_vx_u8mf2(row03, row00, 3, vl + 5);
-    vuint8mf2_t row04 = vslidedown_vx_u8mf2(row04, row00, 4, vl + 5);
-    vuint8mf2_t row05 = vslidedown_vx_u8mf2(row05, row00, 5, vl + 5);
+    vuint8mf2_t row00 = vle8_v_u8mf2(*pp_src - 2, vl);
+    vuint8mf2_t row01 = vle8_v_u8mf2(*pp_src - 2 + 1, vl);
+    vuint8mf2_t row02 = vle8_v_u8mf2(*pp_src - 2 + 2, vl);
+    vuint8mf2_t row03 = vle8_v_u8mf2(*pp_src - 2 + 3, vl);
+    vuint8mf2_t row04 = vle8_v_u8mf2(*pp_src - 2 + 4, vl);
+    vuint8mf2_t row05 = vle8_v_u8mf2(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
-    vuint8mf2_t row10 = vle8_v_u8mf2(*pp_src - 2, vl + 5);
-    vuint8mf2_t row11 = vslidedown_vx_u8mf2(row11, row10, 1, vl + 5);
-    vuint8mf2_t row12 = vslidedown_vx_u8mf2(row12, row10, 2, vl + 5);
-    vuint8mf2_t row13 = vslidedown_vx_u8mf2(row13, row10, 3, vl + 5);
-    vuint8mf2_t row14 = vslidedown_vx_u8mf2(row14, row10, 4, vl + 5);
-    vuint8mf2_t row15 = vslidedown_vx_u8mf2(row15, row10, 5, vl + 5);
+    vuint8mf2_t row10 = vle8_v_u8mf2(*pp_src - 2, vl);
+    vuint8mf2_t row11 = vle8_v_u8mf2(*pp_src - 2 + 1, vl);
+    vuint8mf2_t row12 = vle8_v_u8mf2(*pp_src - 2 + 2, vl);
+    vuint8mf2_t row13 = vle8_v_u8mf2(*pp_src - 2 + 3, vl);
+    vuint8mf2_t row14 = vle8_v_u8mf2(*pp_src - 2 + 4, vl);
+    vuint8mf2_t row15 = vle8_v_u8mf2(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
     vuint16m1_t dst0_u = vwaddu_vv_u16m1(row00, row05, vl);
@@ -94,20 +94,20 @@ __attribute__((always_inline)) static void h_lowpass_i16m1(vint16m1_t *p_dst0, v
 
 __attribute__((always_inline)) static void h_lowpass_u16m2(vuint16m2_t *p_dst0, vuint16m2_t *p_dst1, const uint8_t **pp_src, ptrdiff_t stride, int vl)
 {
-    vuint8m1_t row00 = vle8_v_u8m1(*pp_src - 2, vl + 5);
-    vuint8m1_t row01 = vslidedown_vx_u8m1(row01, row00, 1, vl + 5);
-    vuint8m1_t row02 = vslidedown_vx_u8m1(row02, row00, 2, vl + 5);
-    vuint8m1_t row03 = vslidedown_vx_u8m1(row03, row00, 3, vl + 5);
-    vuint8m1_t row04 = vslidedown_vx_u8m1(row04, row00, 4, vl + 5);
-    vuint8m1_t row05 = vslidedown_vx_u8m1(row05, row00, 5, vl + 5);
+    vuint8m1_t row00 = vle8_v_u8m1(*pp_src - 2, vl);
+    vuint8m1_t row01 = vle8_v_u8m1(*pp_src - 2 + 1, vl);
+    vuint8m1_t row02 = vle8_v_u8m1(*pp_src - 2 + 2, vl);
+    vuint8m1_t row03 = vle8_v_u8m1(*pp_src - 2 + 3, vl);
+    vuint8m1_t row04 = vle8_v_u8m1(*pp_src - 2 + 4, vl);
+    vuint8m1_t row05 = vle8_v_u8m1(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
-    vuint8m1_t row10 = vle8_v_u8m1(*pp_src - 2, vl + 5);
-    vuint8m1_t row11 = vslidedown_vx_u8m1(row11, row10, 1, vl + 5);
-    vuint8m1_t row12 = vslidedown_vx_u8m1(row12, row10, 2, vl + 5);
-    vuint8m1_t row13 = vslidedown_vx_u8m1(row13, row10, 3, vl + 5);
-    vuint8m1_t row14 = vslidedown_vx_u8m1(row14, row10, 4, vl + 5);
-    vuint8m1_t row15 = vslidedown_vx_u8m1(row15, row10, 5, vl + 5);
+    vuint8m1_t row10 = vle8_v_u8m1(*pp_src - 2, vl);
+    vuint8m1_t row11 = vle8_v_u8m1(*pp_src - 2 + 1, vl);
+    vuint8m1_t row12 = vle8_v_u8m1(*pp_src - 2 + 2, vl);
+    vuint8m1_t row13 = vle8_v_u8m1(*pp_src - 2 + 3, vl);
+    vuint8m1_t row14 = vle8_v_u8m1(*pp_src - 2 + 4, vl);
+    vuint8m1_t row15 = vle8_v_u8m1(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
     *p_dst0 = vwaddu_vv_u16m2(row00, row05, vl);
@@ -135,20 +135,20 @@ __attribute__((always_inline)) static void h_lowpass_u16m2(vuint16m2_t *p_dst0, 
 
 __attribute__((always_inline)) static void h_lowpass_u8m1_l2src(vuint8m1_t *p_dst0, vuint8m1_t *p_dst1, const uint8_t **pp_src, ptrdiff_t stride, int vl)
 {
-    vuint8m1_t row00 = vle8_v_u8m1(*pp_src - 2, vl + 5);
-    vuint8m1_t row01 = vslidedown_vx_u8m1(row01, row00, 1, vl + 5);
-    vuint8m1_t row02 = vslidedown_vx_u8m1(row02, row00, 2, vl + 5);
-    vuint8m1_t row03 = vslidedown_vx_u8m1(row03, row00, 3, vl + 5);
-    vuint8m1_t row04 = vslidedown_vx_u8m1(row04, row00, 4, vl + 5);
-    vuint8m1_t row05 = vslidedown_vx_u8m1(row05, row00, 5, vl + 5);
+    vuint8m1_t row00 = vle8_v_u8m1(*pp_src - 2, vl);
+    vuint8m1_t row01 = vle8_v_u8m1(*pp_src - 2 + 1, vl);
+    vuint8m1_t row02 = vle8_v_u8m1(*pp_src - 2 + 2, vl);
+    vuint8m1_t row03 = vle8_v_u8m1(*pp_src - 2 + 3, vl);
+    vuint8m1_t row04 = vle8_v_u8m1(*pp_src - 2 + 4, vl);
+    vuint8m1_t row05 = vle8_v_u8m1(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
-    vuint8m1_t row10 = vle8_v_u8m1(*pp_src - 2, vl + 5);
-    vuint8m1_t row11 = vslidedown_vx_u8m1(row11, row10, 1, vl + 5);
-    vuint8m1_t row12 = vslidedown_vx_u8m1(row12, row10, 2, vl + 5);
-    vuint8m1_t row13 = vslidedown_vx_u8m1(row13, row10, 3, vl + 5);
-    vuint8m1_t row14 = vslidedown_vx_u8m1(row14, row10, 4, vl + 5);
-    vuint8m1_t row15 = vslidedown_vx_u8m1(row15, row10, 5, vl + 5);
+    vuint8m1_t row10 = vle8_v_u8m1(*pp_src - 2, vl);
+    vuint8m1_t row11 = vle8_v_u8m1(*pp_src - 2 + 1, vl);
+    vuint8m1_t row12 = vle8_v_u8m1(*pp_src - 2 + 2, vl);
+    vuint8m1_t row13 = vle8_v_u8m1(*pp_src - 2 + 3, vl);
+    vuint8m1_t row14 = vle8_v_u8m1(*pp_src - 2 + 4, vl);
+    vuint8m1_t row15 = vle8_v_u8m1(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
     vuint16m2_t dst0_u = vwaddu_vv_u16m2(row00, row05, vl);
@@ -182,20 +182,20 @@ __attribute__((always_inline)) static void h_lowpass_u8m1_l2src(vuint8m1_t *p_ds
 
 __attribute__((always_inline)) static void h_lowpass_u8m1_l2src_shift(vuint8m1_t *p_dst0, vuint8m1_t *p_dst1, const uint8_t **pp_src, ptrdiff_t stride, int vl)
 {
-    vuint8m1_t row00 = vle8_v_u8m1(*pp_src - 2, vl + 5);
-    vuint8m1_t row01 = vslidedown_vx_u8m1(row01, row00, 1, vl + 5);
-    vuint8m1_t row02 = vslidedown_vx_u8m1(row02, row00, 2, vl + 5);
-    vuint8m1_t row03 = vslidedown_vx_u8m1(row03, row00, 3, vl + 5);
-    vuint8m1_t row04 = vslidedown_vx_u8m1(row04, row00, 4, vl + 5);
-    vuint8m1_t row05 = vslidedown_vx_u8m1(row05, row00, 5, vl + 5);
+    vuint8m1_t row00 = vle8_v_u8m1(*pp_src - 2, vl);
+    vuint8m1_t row01 = vle8_v_u8m1(*pp_src - 2 + 1, vl);
+    vuint8m1_t row02 = vle8_v_u8m1(*pp_src - 2 + 2, vl);
+    vuint8m1_t row03 = vle8_v_u8m1(*pp_src - 2 + 3, vl);
+    vuint8m1_t row04 = vle8_v_u8m1(*pp_src - 2 + 4, vl);
+    vuint8m1_t row05 = vle8_v_u8m1(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
-    vuint8m1_t row10 = vle8_v_u8m1(*pp_src - 2, vl + 5);
-    vuint8m1_t row11 = vslidedown_vx_u8m1(row11, row10, 1, vl + 5);
-    vuint8m1_t row12 = vslidedown_vx_u8m1(row12, row10, 2, vl + 5);
-    vuint8m1_t row13 = vslidedown_vx_u8m1(row13, row10, 3, vl + 5);
-    vuint8m1_t row14 = vslidedown_vx_u8m1(row14, row10, 4, vl + 5);
-    vuint8m1_t row15 = vslidedown_vx_u8m1(row15, row10, 5, vl + 5);
+    vuint8m1_t row10 = vle8_v_u8m1(*pp_src - 2, vl);
+    vuint8m1_t row11 = vle8_v_u8m1(*pp_src - 2 + 1, vl);
+    vuint8m1_t row12 = vle8_v_u8m1(*pp_src - 2 + 2, vl);
+    vuint8m1_t row13 = vle8_v_u8m1(*pp_src - 2 + 3, vl);
+    vuint8m1_t row14 = vle8_v_u8m1(*pp_src - 2 + 4, vl);
+    vuint8m1_t row15 = vle8_v_u8m1(*pp_src - 2 + 5, vl);
     *pp_src += stride;
 
     vuint16m2_t dst0_u = vwaddu_vv_u16m2(row00, row05, vl);
