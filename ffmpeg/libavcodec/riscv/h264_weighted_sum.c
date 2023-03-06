@@ -23,50 +23,50 @@ __attribute__((always_inline)) static void h264_weight_128(uint8_t *p_block, ptr
 
     while (count > 0)
     {
-        int vl = vsetvl_e8m1(count);
+        int vl = __riscv_vsetvl_e8m1(count);
         uint8_t *p_begin = p_block_iter;
 
         for (int j = 0; j < height; j += 4)
         {
-            vuint8m1_t row0 = vle8_v_u8m1(p_block_iter, vl);
-            vuint8m1_t row1 = vle8_v_u8m1(p_block_iter + stride, vl);
-            vuint8m1_t row2 = vle8_v_u8m1(p_block_iter + stride * 2, vl);
-            vuint8m1_t row3 = vle8_v_u8m1(p_block_iter + stride * 3, vl);
+            vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_block_iter, vl);
+            vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_block_iter + stride, vl);
+            vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_block_iter + stride * 2, vl);
+            vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_block_iter + stride * 3, vl);
             
             vint16m2_t result0_w, result1_w, result2_w, result3_w;
 
-            result0_w = vreinterpret_v_u16m2_i16m2(vzext_vf2_u16m2(row0, vl));
-            result1_w = vreinterpret_v_u16m2_i16m2(vzext_vf2_u16m2(row1, vl));
-            result2_w = vreinterpret_v_u16m2_i16m2(vzext_vf2_u16m2(row2, vl));
-            result3_w = vreinterpret_v_u16m2_i16m2(vzext_vf2_u16m2(row3, vl));
+            result0_w = __riscv_vreinterpret_v_u16m2_i16m2(__riscv_vzext_vf2_u16m2(row0, vl));
+            result1_w = __riscv_vreinterpret_v_u16m2_i16m2(__riscv_vzext_vf2_u16m2(row1, vl));
+            result2_w = __riscv_vreinterpret_v_u16m2_i16m2(__riscv_vzext_vf2_u16m2(row2, vl));
+            result3_w = __riscv_vreinterpret_v_u16m2_i16m2(__riscv_vzext_vf2_u16m2(row3, vl));
 
-            result0_w = vsll_vx_i16m2(result0_w, 7, vl);
-            result1_w = vsll_vx_i16m2(result1_w, 7, vl);
-            result2_w = vsll_vx_i16m2(result2_w, 7, vl);
-            result3_w = vsll_vx_i16m2(result3_w, 7, vl);
+            result0_w = __riscv_vsll_vx_i16m2(result0_w, 7, vl);
+            result1_w = __riscv_vsll_vx_i16m2(result1_w, 7, vl);
+            result2_w = __riscv_vsll_vx_i16m2(result2_w, 7, vl);
+            result3_w = __riscv_vsll_vx_i16m2(result3_w, 7, vl);
 
-            result0_w = vadd_vx_i16m2(result0_w, offset, vl);
-            result1_w = vadd_vx_i16m2(result1_w, offset, vl);
-            result2_w = vadd_vx_i16m2(result2_w, offset, vl);
-            result3_w = vadd_vx_i16m2(result3_w, offset, vl);                                    
+            result0_w = __riscv_vadd_vx_i16m2(result0_w, offset, vl);
+            result1_w = __riscv_vadd_vx_i16m2(result1_w, offset, vl);
+            result2_w = __riscv_vadd_vx_i16m2(result2_w, offset, vl);
+            result3_w = __riscv_vadd_vx_i16m2(result3_w, offset, vl);                                    
 
-            result0_w = vmax_vx_i16m2(result0_w, 0, vl);
-            result1_w = vmax_vx_i16m2(result1_w, 0, vl);
-            result2_w = vmax_vx_i16m2(result2_w, 0, vl);
-            result3_w = vmax_vx_i16m2(result3_w, 0, vl);
+            result0_w = __riscv_vmax_vx_i16m2(result0_w, 0, vl);
+            result1_w = __riscv_vmax_vx_i16m2(result1_w, 0, vl);
+            result2_w = __riscv_vmax_vx_i16m2(result2_w, 0, vl);
+            result3_w = __riscv_vmax_vx_i16m2(result3_w, 0, vl);
 
-            vuint8m1_t result0_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
-            vuint8m1_t result1_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
-            vuint8m1_t result2_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result2_w), shift, vl);
-            vuint8m1_t result3_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result3_w), shift, vl);
+            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
+            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
+            vuint8m1_t result2_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result2_w), shift, vl);
+            vuint8m1_t result3_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result3_w), shift, vl);
 
-            vse8_v_u8m1(p_block_iter, result0_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result0_n, vl);
             p_block_iter += stride;
-            vse8_v_u8m1(p_block_iter, result1_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result1_n, vl);
             p_block_iter += stride;
-            vse8_v_u8m1(p_block_iter, result2_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result2_n, vl);
             p_block_iter += stride;
-            vse8_v_u8m1(p_block_iter, result3_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result3_n, vl);
             p_block_iter += stride;            
         }
 
@@ -98,47 +98,47 @@ __attribute__((always_inline)) static void h264_weight_normal(uint8_t *p_block, 
 
     while (count > 0)
     {
-        int vl = vsetvl_e8m1(count);
+        int vl = __riscv_vsetvl_e8m1(count);
         uint8_t *p_begin = p_block_iter;
 
-        vint8m1_t weight_v = vmv_v_x_i8m1(weight, vl);
+        vint8m1_t weight_v = __riscv_vmv_v_x_i8m1(weight, vl);
 
         for (int j = 0; j < height; j += 4)
         {
-            vuint8m1_t row0 = vle8_v_u8m1(p_block_iter, vl);
-            vuint8m1_t row1 = vle8_v_u8m1(p_block_iter + stride, vl);
-            vuint8m1_t row2 = vle8_v_u8m1(p_block_iter + stride * 2, vl);
-            vuint8m1_t row3 = vle8_v_u8m1(p_block_iter + stride * 3, vl);
+            vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_block_iter, vl);
+            vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_block_iter + stride, vl);
+            vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_block_iter + stride * 2, vl);
+            vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_block_iter + stride * 3, vl);
             
             vint16m2_t result0_w, result1_w, result2_w, result3_w;
 
-            result0_w = vwmulsu_vv_i16m2(weight_v, row0, vl);
-            result1_w = vwmulsu_vv_i16m2(weight_v, row1, vl);
-            result2_w = vwmulsu_vv_i16m2(weight_v, row2, vl);
-            result3_w = vwmulsu_vv_i16m2(weight_v, row3, vl);
+            result0_w = __riscv_vwmulsu_vv_i16m2(weight_v, row0, vl);
+            result1_w = __riscv_vwmulsu_vv_i16m2(weight_v, row1, vl);
+            result2_w = __riscv_vwmulsu_vv_i16m2(weight_v, row2, vl);
+            result3_w = __riscv_vwmulsu_vv_i16m2(weight_v, row3, vl);
 
-            result0_w = vsadd_vx_i16m2(result0_w, value, vl);
-            result1_w = vsadd_vx_i16m2(result1_w, value, vl);
-            result2_w = vsadd_vx_i16m2(result2_w, value, vl);
-            result3_w = vsadd_vx_i16m2(result3_w, value, vl);
+            result0_w = __riscv_vsadd_vx_i16m2(result0_w, value, vl);
+            result1_w = __riscv_vsadd_vx_i16m2(result1_w, value, vl);
+            result2_w = __riscv_vsadd_vx_i16m2(result2_w, value, vl);
+            result3_w = __riscv_vsadd_vx_i16m2(result3_w, value, vl);
 
-            result0_w = vmax_vx_i16m2(result0_w, 0, vl);
-            result1_w = vmax_vx_i16m2(result1_w, 0, vl);
-            result2_w = vmax_vx_i16m2(result2_w, 0, vl);
-            result3_w = vmax_vx_i16m2(result3_w, 0, vl);
+            result0_w = __riscv_vmax_vx_i16m2(result0_w, 0, vl);
+            result1_w = __riscv_vmax_vx_i16m2(result1_w, 0, vl);
+            result2_w = __riscv_vmax_vx_i16m2(result2_w, 0, vl);
+            result3_w = __riscv_vmax_vx_i16m2(result3_w, 0, vl);
 
-            vuint8m1_t result0_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
-            vuint8m1_t result1_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
-            vuint8m1_t result2_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result2_w), shift, vl);
-            vuint8m1_t result3_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result3_w), shift, vl);
+            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
+            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
+            vuint8m1_t result2_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result2_w), shift, vl);
+            vuint8m1_t result3_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result3_w), shift, vl);
 
-            vse8_v_u8m1(p_block_iter, result0_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result0_n, vl);
             p_block_iter += stride;
-            vse8_v_u8m1(p_block_iter, result1_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result1_n, vl);
             p_block_iter += stride;
-            vse8_v_u8m1(p_block_iter, result2_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result2_n, vl);
             p_block_iter += stride;
-            vse8_v_u8m1(p_block_iter, result3_n, vl);
+            __riscv_vse8_v_u8m1(p_block_iter, result3_n, vl);
             p_block_iter += stride;            
         }
 
@@ -165,32 +165,32 @@ __attribute__((always_inline)) static void h264_biweight(uint8_t *p_dst, uint8_t
 
     while (count > 0)
     {
-        int vl = vsetvl_e8m1(count);
+        int vl = __riscv_vsetvl_e8m1(count);
         uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         for (int j = 0; j < height; j += 4)
         {
-            vuint8m1_t src0 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t src0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
-            vuint8m1_t src1 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t src1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
-            vuint8m1_t src2 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t src2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
-            vuint8m1_t src3 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t src3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
             
-            vuint8m1_t dst0 = vle8_v_u8m1(p_dst_iter, vl);
-            vuint8m1_t dst1 = vle8_v_u8m1(p_dst_iter + stride, vl);
-            vuint8m1_t dst2 = vle8_v_u8m1(p_dst_iter + stride * 2, vl);
-            vuint8m1_t dst3 = vle8_v_u8m1(p_dst_iter + stride * 3, vl);
+            vuint8m1_t dst0 = __riscv_vle8_v_u8m1(p_dst_iter, vl);
+            vuint8m1_t dst1 = __riscv_vle8_v_u8m1(p_dst_iter + stride, vl);
+            vuint8m1_t dst2 = __riscv_vle8_v_u8m1(p_dst_iter + stride * 2, vl);
+            vuint8m1_t dst3 = __riscv_vle8_v_u8m1(p_dst_iter + stride * 3, vl);
             
             vint16m2_t result0_w, result1_w, result2_w, result3_w;
 
-            result0_w = vmv_v_x_i16m2(value, vl);
-            result1_w = vmv_v_x_i16m2(value, vl);
-            result2_w = vmv_v_x_i16m2(value, vl);
-            result3_w = vmv_v_x_i16m2(value, vl);
+            result0_w = __riscv_vmv_v_x_i16m2(value, vl);
+            result1_w = __riscv_vmv_v_x_i16m2(value, vl);
+            result2_w = __riscv_vmv_v_x_i16m2(value, vl);
+            result3_w = __riscv_vmv_v_x_i16m2(value, vl);
 /*
             result0_w = vand_vx_i16m2(result0_w, 0, vl);
             result1_w = vand_vx_i16m2(result1_w, 0, vl);
@@ -202,33 +202,33 @@ __attribute__((always_inline)) static void h264_biweight(uint8_t *p_dst, uint8_t
             result2_w = vor_vx_i16m2(result2_w, value, vl);
             result3_w = vor_vx_i16m2(result3_w, value, vl);
 */
-            result0_w = vwmaccsu_vx_i16m2(result0_w, weightd, dst0, vl);
-            result1_w = vwmaccsu_vx_i16m2(result1_w, weightd, dst1, vl);
-            result2_w = vwmaccsu_vx_i16m2(result2_w, weightd, dst2, vl);
-            result3_w = vwmaccsu_vx_i16m2(result3_w, weightd, dst3, vl);
+            result0_w = __riscv_vwmaccsu_vx_i16m2(result0_w, weightd, dst0, vl);
+            result1_w = __riscv_vwmaccsu_vx_i16m2(result1_w, weightd, dst1, vl);
+            result2_w = __riscv_vwmaccsu_vx_i16m2(result2_w, weightd, dst2, vl);
+            result3_w = __riscv_vwmaccsu_vx_i16m2(result3_w, weightd, dst3, vl);
 
-            result0_w = vwmaccsu_vx_i16m2(result0_w, weights, src0, vl);
-            result1_w = vwmaccsu_vx_i16m2(result1_w, weights, src1, vl);
-            result2_w = vwmaccsu_vx_i16m2(result2_w, weights, src2, vl);
-            result3_w = vwmaccsu_vx_i16m2(result3_w, weights, src3, vl);
+            result0_w = __riscv_vwmaccsu_vx_i16m2(result0_w, weights, src0, vl);
+            result1_w = __riscv_vwmaccsu_vx_i16m2(result1_w, weights, src1, vl);
+            result2_w = __riscv_vwmaccsu_vx_i16m2(result2_w, weights, src2, vl);
+            result3_w = __riscv_vwmaccsu_vx_i16m2(result3_w, weights, src3, vl);
 
-            result0_w = vmax_vx_i16m2(result0_w, 0, vl);
-            result1_w = vmax_vx_i16m2(result1_w, 0, vl);
-            result2_w = vmax_vx_i16m2(result2_w, 0, vl);
-            result3_w = vmax_vx_i16m2(result3_w, 0, vl);
+            result0_w = __riscv_vmax_vx_i16m2(result0_w, 0, vl);
+            result1_w = __riscv_vmax_vx_i16m2(result1_w, 0, vl);
+            result2_w = __riscv_vmax_vx_i16m2(result2_w, 0, vl);
+            result3_w = __riscv_vmax_vx_i16m2(result3_w, 0, vl);
 
-            vuint8m1_t result0_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
-            vuint8m1_t result1_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
-            vuint8m1_t result2_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result2_w), shift, vl);
-            vuint8m1_t result3_n = vnclipu_wx_u8m1(vreinterpret_v_i16m2_u16m2(result3_w), shift, vl);
+            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
+            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
+            vuint8m1_t result2_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result2_w), shift, vl);
+            vuint8m1_t result3_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result3_w), shift, vl);
 
-            vse8_v_u8m1(p_dst_iter, result0_n, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, result0_n, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, result1_n, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, result1_n, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, result2_n, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, result2_n, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, result3_n, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, result3_n, vl);
             p_dst_iter += stride;            
         }
         

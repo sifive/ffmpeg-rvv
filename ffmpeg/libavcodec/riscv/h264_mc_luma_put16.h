@@ -10,45 +10,45 @@ __attribute__((always_inline)) static void put_copy_block16(uint8_t *p_dst, cons
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         for (int j = 0; j < 16; j += 8)
         {
-            vuint8m1_t row0 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
-            vuint8m1_t row1 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
-            vuint8m1_t row2 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
-            vuint8m1_t row3 = vle8_v_u8m1(p_src_iter, vl);
-            p_src_iter += stride;
-
-            vuint8m1_t row4 = vle8_v_u8m1(p_src_iter, vl);
-            p_src_iter += stride;
-            vuint8m1_t row5 = vle8_v_u8m1(p_src_iter, vl);
-            p_src_iter += stride;
-            vuint8m1_t row6 = vle8_v_u8m1(p_src_iter, vl);
-            p_src_iter += stride;
-            vuint8m1_t row7 = vle8_v_u8m1(p_src_iter, vl);
+            vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
             p_src_iter += stride;
 
-            vse8_v_u8m1(p_dst_iter, row0, vl);
+            vuint8m1_t row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
+            p_src_iter += stride;
+            vuint8m1_t row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
+            p_src_iter += stride;
+            vuint8m1_t row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
+            p_src_iter += stride;
+            vuint8m1_t row7 = __riscv_vle8_v_u8m1(p_src_iter, vl);
+            p_src_iter += stride;
+
+            __riscv_vse8_v_u8m1(p_dst_iter, row0, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row1, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row1, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row2, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row2, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row3, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row3, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row4, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row4, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row5, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row5, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row6, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row6, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, row7, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, row7, vl);
             p_dst_iter += stride;                                                                                      
         }
 
@@ -66,7 +66,7 @@ __attribute__((always_inline)) static void put_h264_qpel16_h_lowpass(uint8_t *p_
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
@@ -75,9 +75,9 @@ __attribute__((always_inline)) static void put_h264_qpel16_h_lowpass(uint8_t *p_
             vuint16m2_t dst0_u, dst1_u;
             h_lowpass_u16m2(&dst0_u, &dst1_u, &p_src_iter, src_stride, vl);
 
-            vse8_v_u8m1(p_dst_iter, vnclipu_wx_u8m1(dst0_u, 5, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0_u, 5, vl), vl);
             p_dst_iter += dst_stride;
-            vse8_v_u8m1(p_dst_iter, vnclipu_wx_u8m1(dst1_u, 5, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1_u, 5, vl), vl);
             p_dst_iter += dst_stride;
         }
 
@@ -95,7 +95,7 @@ __attribute__((always_inline)) static void put_h264_qpel16_hv_lowpass(uint8_t *p
 
     while(len > 0)
     {
-        int vl = vsetvl_e8mf2(len);
+        int vl = __riscv_vsetvl_e8mf2(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
         
@@ -118,33 +118,33 @@ __attribute__((always_inline)) static void put_h264_qpel16_hv_lowpass(uint8_t *p
         vuint8mf2_t dst0_u8, dst1_u8;
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
 
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row2, &h_row3, &h_row4, &h_row5, &h_row6, &h_row7, &h_row8, stride, vl);
         
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row4, &h_row5, &h_row6, &h_row7, &h_row8, &h_row9, &h_row10, stride, vl);
 
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row6, &h_row7, &h_row8, &h_row9, &h_row10, &h_row11, &h_row12, stride, vl);
  
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         vint16m1_t h_row14, h_row15, h_row16, h_row17, h_row18, h_row19, h_row20, h_row21;
@@ -157,33 +157,33 @@ __attribute__((always_inline)) static void put_h264_qpel16_hv_lowpass(uint8_t *p
         v_lowpass_u32m2(&dst0, &dst1, &h_row8, &h_row9, &h_row10, &h_row11, &h_row12, &h_row13, &h_row14, stride, vl);
 
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row10, &h_row11, &h_row12, &h_row13, &h_row14, &h_row15, &h_row16, stride, vl);
 
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row12, &h_row13, &h_row14, &h_row15, &h_row16, &h_row17, &h_row18, stride, vl);
 
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
         p_dst_iter += stride;
 
         v_lowpass_u32m2(&dst0, &dst1, &h_row14, &h_row15, &h_row16, &h_row17, &h_row18, &h_row19, &h_row20, stride, vl);
 
         u32_to_u8(&dst0_u8, &dst1_u8, dst0, dst1, vl);
-        vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst0_u8, vl);
         p_dst_iter += stride;
-        vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
+        __riscv_vse8_v_u8mf2(p_dst_iter, dst1_u8, vl);
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
@@ -200,7 +200,7 @@ __attribute__((always_inline)) static void put_h264_qpel16_hv_lowpass_l2(uint8_t
 
     while (len > 0)
     {
-        int vl = vsetvl_e8mf2(len);
+        int vl = __riscv_vsetvl_e8mf2(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
         uint8_t *p_l2_src_begin = p_l2_src_iter;
@@ -272,117 +272,117 @@ __attribute__((always_inline)) static void put_h264_qpel16_v_lowpass(uint8_t *p_
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         p_src_iter -= (src_stride * 2);
 
-        vuint8m1_t row0 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        vuint8m1_t row1 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        vuint8m1_t row2 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        vuint8m1_t row3 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        vuint8m1_t row4 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        vuint8m1_t row5 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        vuint8m1_t row6 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         vuint8m1_t dst0, dst1;
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 3rd, 4th dst
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 5th, 6th dst
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
         
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 7th, 8th dst
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 9th, 10th dst
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row1, row2, row3, row4, row5, row6, row0, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 11th, 12th dst
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row3, row4, row5, row6, row0, row1, row2, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 13th, 14th dst
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row5, row6, row0, row1, row2, row3, row4, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += dst_stride;
 
         // 15th, 16th dst
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += src_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += dst_stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
@@ -399,181 +399,181 @@ __attribute__((always_inline)) static void put_h264_qpel16_v_lowpass_l2(uint8_t 
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         const uint8_t *p_l2_src_begin = p_l2_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         p_src_iter -= (stride * 2);
 
-        vuint8m1_t row0 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row1 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row2 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row3 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row4 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row5 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row6 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
         
-        vuint8m1_t l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        vuint8m1_t l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        vuint8m1_t l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        vuint8m1_t l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         vuint8m1_t dst0, dst1; 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 3rd, 4th dst
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 5th, 6th dst
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 7th, 8th dst
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 9th, 10th dst
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row1, row2, row3, row4, row5, row6, row0, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 11th, 12th dst
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row3, row4, row5, row6, row0, row1, row2, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 13th, 14th dst
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row5, row6, row0, row1, row2, row3, row4, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 15th, 16th dst
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
-        l2_row0 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row0 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
-        l2_row1 = vle8_v_u8m1(p_l2_src_iter, vl);
+        l2_row1 = __riscv_vle8_v_u8m1(p_l2_src_iter, vl);
         p_l2_src_iter += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
@@ -590,140 +590,140 @@ __attribute__((always_inline)) static void put_h264_qpel16_v_lowpass_l2src(uint8
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
         p_src_iter -= (stride * 2);
 
-        vuint8m1_t row0 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row1 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row2 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row3 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row4 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row5 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row6 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
         
         vuint8m1_t dst0, dst1; 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row2, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row3, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 3rd, 4th dst
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row4, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row5, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row4, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row5, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 5th, 6th dst
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row6, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row0, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row6, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row0, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 7th, 8th dst
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
         
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row1, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row2, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row1, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row2, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 9th, 10th dst
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row1, row2, row3, row4, row5, row6, row0, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row3, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row4, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row3, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row4, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 11th, 12th dst
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row3, row4, row5, row6, row0, row1, row2, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row5, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row6, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row5, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row6, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 13th, 14th dst
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row5, row6, row0, row1, row2, row3, row4, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 15th, 16th dst
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row2, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row3, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
@@ -739,7 +739,7 @@ __attribute__((always_inline)) static void put_h264_qpel16_h_lowpass_l2src(uint8
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
@@ -748,9 +748,9 @@ __attribute__((always_inline)) static void put_h264_qpel16_h_lowpass_l2src(uint8
             vuint8m1_t dst0, dst1;
             h_lowpass_u8m1_l2src(&dst0, &dst1, &p_src_iter, stride, vl);
         
-            vse8_v_u8m1(p_dst_iter, dst0, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, dst1, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
             p_dst_iter += stride;
         }
 
@@ -768,7 +768,7 @@ __attribute__((always_inline)) static void put_h264_qpel16_h_lowpass_l2src_shift
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
 
@@ -777,9 +777,9 @@ __attribute__((always_inline)) static void put_h264_qpel16_h_lowpass_l2src_shift
             vuint8m1_t dst0, dst1;
             h_lowpass_u8m1_l2src_shift(&dst0, &dst1, &p_src_iter, stride, vl);
 
-            vse8_v_u8m1(p_dst_iter, dst0, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
             p_dst_iter += stride;
-            vse8_v_u8m1(p_dst_iter, dst1, vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
             p_dst_iter += stride;
         }
 
@@ -798,140 +798,140 @@ __attribute__((always_inline)) static void put_h264_qpel16_v_lowpass_l2src_shift
 
     while (len > 0)
     {
-        int vl = vsetvl_e8m1(len);
+        int vl = __riscv_vsetvl_e8m1(len);
         const uint8_t *p_src_begin = p_src_iter;
         uint8_t *p_dst_begin = p_dst_iter;
         
         p_src_iter -= (stride * 2);
 
-        vuint8m1_t row0 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row1 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row2 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row3 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row4 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row5 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        vuint8m1_t row6 = vle8_v_u8m1(p_src_iter, vl);
+        vuint8m1_t row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
         
         vuint8m1_t dst0, dst1; 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row3, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row4, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row3, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row4, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 3rd, 4th dst
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row5, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row6, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row5, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row6, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 5th, 6th dst
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row0, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row0, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row1, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 7th, 8th dst
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
         
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row2, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row3, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 9th, 10th dst
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row0 = vle8_v_u8m1(p_src_iter, vl);
+        row0 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row1, row2, row3, row4, row5, row6, row0, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row4, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row5, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row4, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row5, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 11th, 12th dst
-        row1 = vle8_v_u8m1(p_src_iter, vl);
+        row1 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row2 = vle8_v_u8m1(p_src_iter, vl);
+        row2 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row3, row4, row5, row6, row0, row1, row2, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row6, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row0, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row6, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row0, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 13th, 14th dst
-        row3 = vle8_v_u8m1(p_src_iter, vl);
+        row3 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row4 = vle8_v_u8m1(p_src_iter, vl);
+        row4 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row5, row6, row0, row1, row2, row3, row4, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row1, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row2, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row1, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row2, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
         p_dst_iter += stride;
 
         // 15th, 16th dst
-        row5 = vle8_v_u8m1(p_src_iter, vl);
+        row5 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
-        row6 = vle8_v_u8m1(p_src_iter, vl);
+        row6 = __riscv_vle8_v_u8m1(p_src_iter, vl);
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = vaaddu_vv_u8m1(dst0, row3, vl);
-        dst1 = vaaddu_vv_u8m1(dst1, row4, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row3, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row4, vl);
 
-        vse8_v_u8m1(p_dst_iter, dst0, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
-        vse8_v_u8m1(p_dst_iter, dst1, vl);
+        __riscv_vse8_v_u8m1(p_dst_iter, dst1, vl);
 
         p_dst_iter = p_dst_begin + vl;
         p_src_iter = p_src_begin + vl;
