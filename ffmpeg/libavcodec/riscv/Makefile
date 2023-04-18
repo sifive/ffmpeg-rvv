@@ -28,3 +28,5 @@ OBJS-$(CONFIG_H264DSP) += riscv/h264_dsp_init_riscv.o
 RVV-OBJS-$(CONFIG_H264DSP) += riscv/h264_weighted_sum.o
 RVV-OBJS-$(CONFIG_H264DSP) += riscv/h264_inloop.o
 RVV-OBJS-$(CONFIG_H264DSP) += riscv/h264_idct.o
+OBJS-$(CONFIG_H264PRED) += riscv/h264_pred_init_riscv.o
+RVV-OBJS-$(CONFIG_H264PRED)  += riscv/h264_pred.o
