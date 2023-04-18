@@ -2210,6 +2210,7 @@ HEADERS_LIST="
 
 INTRINSICS_LIST="
     intrinsics_neon
+    intrinsics_rvv
 "
 
 MATH_FUNCS="
@@ -6117,6 +6118,7 @@ elif enabled ppc; then
 elif enabled riscv; then
 
     enabled rvv && check_inline_asm rvv '".option arch, +v\nvsetivli zero, 0, e8, m1, ta, ma"'
+    enabled rvv && check_cc intrinsics_rvv riscv_vector.h "int vl = __riscv_vsetvl_e8m1(8)"
 
 elif enabled x86; then
 
