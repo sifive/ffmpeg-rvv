@@ -19,3 +19,6 @@ OBJS-$(CONFIG_PIXBLOCKDSP) += riscv/pixblockdsp_init.o \
 RVV-OBJS-$(CONFIG_PIXBLOCKDSP) += riscv/pixblockdsp_rvv.o
 OBJS-$(CONFIG_VORBIS_DECODER) += riscv/vorbisdsp_init.o
 RVV-OBJS-$(CONFIG_VORBIS_DECODER) += riscv/vorbisdsp_rvv.o
+
+OBJS-$(CONFIG_H264CHROMA) += riscv/h264_chroma_init_riscv.o
+RVV-OBJS-$(CONFIG_H264CHROMA) += riscv/h264_mc_chroma.o
