@@ -69,7 +69,11 @@ void h264_idct_add_8_rvv(uint8_t *p_dst, int16_t *p_block, int stride)
     __riscv_vse16_v_i16m1(&temp[4], result1, vl);
     __riscv_vse16_v_i16m1(&temp[8], result2, vl);
     __riscv_vse16_v_i16m1(&temp[12], result3, vl);
-    __riscv_vlseg4e16_v_i16m1(&row0, &row1, &row2, &row3, &temp[0], vl);
+    vint16m1x4_t rowx4 = __riscv_vlseg4e16_v_i16m1x4(&temp[0], vl);
+    row0 = __riscv_vget_v_i16m1x4_i16m1(rowx4, 0);
+    row1 = __riscv_vget_v_i16m1x4_i16m1(rowx4, 1);
+    row2 = __riscv_vget_v_i16m1x4_i16m1(rowx4, 2);
+    row3 = __riscv_vget_v_i16m1x4_i16m1(rowx4, 3);
 
     // 1-D column idct
     z0 = __riscv_vadd_vv_i16m1(row0, row2, vl);
@@ -109,10 +113,10 @@ void h264_idct_add_8_rvv(uint8_t *p_dst, int16_t *p_block, int stride)
     result2 = __riscv_vmax_vx_i16m1(result2, 0, vl);
     result3 = __riscv_vmax_vx_i16m1(result3, 0, vl);
 
-    vuint8mf2_t result0_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result0), 0, vl);
-    vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 0, vl);
-    vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 0, vl);
-    vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 0, vl);
+    vuint8mf2_t result0_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result0), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 0, __RISCV_FRM_RNE, vl);
 
     __riscv_vse8_v_u8mf2(p_dst, result0_n, vl);
     __riscv_vse8_v_u8mf2(p_dst + stride, result1_n, vl);
@@ -280,7 +284,15 @@ void h264_idct8_add_8_rvv(uint8_t *p_dst, int16_t *p_block, int stride)
     __riscv_vse16_v_i16m1(&temp[48], result6, vl);
     __riscv_vse16_v_i16m1(&temp[56], result7, vl);
 
-    __riscv_vlseg8e16_v_i16m1(&row0, &row1, &row2, &row3, &row4, &row5, &row6, &row7, &temp[0], vl);
+    vint16m1x8_t rowx8 = __riscv_vlseg8e16_v_i16m1x8(&temp[0], vl);
+    row0 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 0);
+    row1 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 1);
+    row2 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 2);
+    row3 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 3);
+    row4 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 4);
+    row5 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 5);
+    row6 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 6);
+    row7 = __riscv_vget_v_i16m1x8_i16m1(rowx8, 7);
 
     // 1-D column idct
     a0 = __riscv_vadd_vv_i16m1(row0, row4, vl);
@@ -376,14 +388,14 @@ void h264_idct8_add_8_rvv(uint8_t *p_dst, int16_t *p_block, int stride)
     result6 = __riscv_vmax_vx_i16m1(result6, 0, vl);
     result7 = __riscv_vmax_vx_i16m1(result7, 0, vl);
 
-    vuint8mf2_t result0_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result0), 0, vl);
-    vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 0, vl);
-    vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 0, vl);
-    vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 0, vl);
-    vuint8mf2_t result4_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result4), 0, vl);
-    vuint8mf2_t result5_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result5), 0, vl);
-    vuint8mf2_t result6_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result6), 0, vl);
-    vuint8mf2_t result7_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result7), 0, vl);
+    vuint8mf2_t result0_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result0), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result4_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result4), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result5_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result5), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result6_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result6), 0, __RISCV_FRM_RNE, vl);
+    vuint8mf2_t result7_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result7), 0, __RISCV_FRM_RNE, vl);
 
     __riscv_vse8_v_u8mf2(p_dst, result0_n, vl);
     __riscv_vse8_v_u8mf2(p_dst + stride, result1_n, vl);

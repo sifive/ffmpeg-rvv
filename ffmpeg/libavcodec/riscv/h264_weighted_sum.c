@@ -36,8 +36,6 @@ __attribute__((always_inline)) static void h264_weight_128(uint8_t *p_block, ptr
 
     int shift = log2_den;
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_DOWNWARD);
 
     int count = width;
 
@@ -65,8 +63,8 @@ __attribute__((always_inline)) static void h264_weight_128(uint8_t *p_block, ptr
             result0_w = __riscv_vmax_vx_i16m2(result0_w, 0, vl);
             result1_w = __riscv_vmax_vx_i16m2(result1_w, 0, vl);
 
-            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
-            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
+            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, __RISCV_FRM_RDN, vl);
+            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, __RISCV_FRM_RDN, vl);
 
             __riscv_vse8_v_u8m1(p_block_iter, result0_n, vl);
             p_block_iter += stride;
@@ -78,7 +76,6 @@ __attribute__((always_inline)) static void h264_weight_128(uint8_t *p_block, ptr
         count -= vl;
     }
 
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h264_weight_normal(uint8_t *p_block, ptrdiff_t stride,
@@ -95,8 +92,6 @@ __attribute__((always_inline)) static void h264_weight_normal(uint8_t *p_block, 
 
     int shift = log2_den;
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_DOWNWARD);
 
     int count = width;
 
@@ -123,8 +118,8 @@ __attribute__((always_inline)) static void h264_weight_normal(uint8_t *p_block, 
             result0_w = __riscv_vmax_vx_i16m2(result0_w, 0, vl);
             result1_w = __riscv_vmax_vx_i16m2(result1_w, 0, vl);
 
-            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
-            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
+            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, __RISCV_FRM_RDN, vl);
+            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, __RISCV_FRM_RDN, vl);
 
             __riscv_vse8_v_u8m1(p_block_iter, result0_n, vl);
             p_block_iter += stride;
@@ -136,7 +131,6 @@ __attribute__((always_inline)) static void h264_weight_normal(uint8_t *p_block, 
         count -= vl;
     }
 
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h264_biweight(uint8_t *p_dst, uint8_t *p_src, ptrdiff_t stride,
@@ -148,8 +142,6 @@ __attribute__((always_inline)) static void h264_biweight(uint8_t *p_dst, uint8_t
     short value = (unsigned int)((offset + 1) | 1) << log2_den;
     int shift = log2_den + 1;
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_DOWNWARD);
 
     int count = width;
 
@@ -183,8 +175,8 @@ __attribute__((always_inline)) static void h264_biweight(uint8_t *p_dst, uint8_t
             result0_w = __riscv_vmax_vx_i16m2(result0_w, 0, vl);
             result1_w = __riscv_vmax_vx_i16m2(result1_w, 0, vl);
 
-            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, vl);
-            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, vl);
+            vuint8m1_t result0_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result0_w), shift, __RISCV_FRM_RDN, vl);
+            vuint8m1_t result1_n = __riscv_vnclipu_wx_u8m1(__riscv_vreinterpret_v_i16m2_u16m2(result1_w), shift, __RISCV_FRM_RDN, vl);
 
             __riscv_vse8_v_u8m1(p_dst_iter, result0_n, vl);
             p_dst_iter += stride;
@@ -197,7 +189,6 @@ __attribute__((always_inline)) static void h264_biweight(uint8_t *p_dst, uint8_t
         count -= vl;
     }
 
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 void weight_h264_pixels_16_8_rvv(uint8_t *p_block, ptrdiff_t stride,

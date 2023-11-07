@@ -98,7 +98,7 @@ __attribute__((always_inline)) static void luma_core(vuint8mf2_t *p_p1_dst, vuin
     cond3 = __riscv_vmand_mm_b16(cond3, cond1, vl);
 
     // p1
-    vint16m1_t sum_p0_q0 = __riscv_vaadd_vv_i16m1(p0_i16, q0_i16, vl);
+    vint16m1_t sum_p0_q0 = __riscv_vaadd_vv_i16m1(p0_i16, q0_i16, __RISCV_FRM_RNE, vl);
     vint16m1_t p1_new_i16 = __riscv_vadd_vv_i16m1(sum_p0_q0, p2_i16, vl);
     p1_new_i16 = __riscv_vsra_vx_i16m1(p1_new_i16, 1, vl);
     vint16m1_t p1_new_upper = __riscv_vadd_vv_i16m1(p1_i16, tc, vl);
@@ -122,7 +122,7 @@ __attribute__((always_inline)) static void luma_core(vuint8mf2_t *p_p1_dst, vuin
     vint16m1_t sub_p1_q1 = __riscv_vsub_vv_i16m1(p1_i16, q1_i16, vl);
     vint16m1_t delta_i16 = __riscv_vsll_vx_i16m1(sub_q0_p0, 2, vl);
     delta_i16 = __riscv_vadd_vv_i16m1(delta_i16, sub_p1_q1, vl);
-    delta_i16 = __riscv_vssra_vx_i16m1(delta_i16, 3, vl);
+    delta_i16 = __riscv_vssra_vx_i16m1(delta_i16, 3, __RISCV_FRM_RNE, vl);
     delta_i16 = __riscv_vmin_vv_i16m1(delta_i16, tc_adjust, vl);
     delta_i16 = __riscv_vmax_vv_i16m1(delta_i16, __riscv_vrsub_vx_i16m1(tc_adjust, 0, vl), vl);
 
@@ -131,17 +131,14 @@ __attribute__((always_inline)) static void luma_core(vuint8mf2_t *p_p1_dst, vuin
     p0_new_i16 = __riscv_vmax_vx_i16m1(p0_new_i16, 0, vl);
     q0_new_i16 = __riscv_vmax_vx_i16m1(q0_new_i16, 0, vl);
 
-    *p_p0_dst= __riscv_vnclipu_wx_u8mf2_mu(cond1, p0, __riscv_vreinterpret_v_i16m1_u16m1(p0_new_i16), 0, vl);
-    *p_q0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond1, q0, __riscv_vreinterpret_v_i16m1_u16m1(q0_new_i16), 0, vl);
+    *p_p0_dst= __riscv_vnclipu_wx_u8mf2_mu(cond1, p0, __riscv_vreinterpret_v_i16m1_u16m1(p0_new_i16), 0, __RISCV_FRM_RNE, vl);
+    *p_q0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond1, q0, __riscv_vreinterpret_v_i16m1_u16m1(q0_new_i16), 0, __RISCV_FRM_RNE, vl);
 }
 
 __attribute__((always_inline)) static void v_loop_filter_luma(uint8_t *p_pix, ptrdiff_t stride,
                                                               int width, int alpha, int beta, int8_t *p_tc0)
 {
     uint8_t *p_iter = p_pix;
-
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
 
     int count = width;
     int tc_offset = 0;
@@ -172,17 +169,12 @@ __attribute__((always_inline)) static void v_loop_filter_luma(uint8_t *p_pix, pt
         tc_offset = tc_offset + vl;
         p_iter = p_iter + vl;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h_loop_filter_luma(uint8_t *p_pix, ptrdiff_t stride,
                                                               int width, int alpha, int beta, int8_t *p_tc0)
 {
     uint8_t *p_iter = p_pix;
-
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
 
     int count = width;
     int tc_offset = 0;
@@ -194,20 +186,30 @@ __attribute__((always_inline)) static void h_loop_filter_luma(uint8_t *p_pix, pt
         vint8mf2_t tc8;
         extend_tc0(&tc8, p_tc0, tc_offset, vl);
 
-        vuint8mf2_t p2, p1, p0, q0, q1, q2;
-        __riscv_vlsseg6e8_v_u8mf2(&p2, &p1, &p0, &q0, &q1, &q2, p_iter - 3, stride, width);
+        vuint8mf2x6_t px6 =  __riscv_vlsseg6e8_v_u8mf2x6(p_iter - 3, stride, width);
+
+        vuint8mf2_t p2 = __riscv_vget_v_u8mf2x6_u8mf2(px6, 0);
+        vuint8mf2_t p1 = __riscv_vget_v_u8mf2x6_u8mf2(px6, 1);
+        vuint8mf2_t p0 = __riscv_vget_v_u8mf2x6_u8mf2(px6, 2);
+        vuint8mf2_t q0 = __riscv_vget_v_u8mf2x6_u8mf2(px6, 3);
+        vuint8mf2_t q1 = __riscv_vget_v_u8mf2x6_u8mf2(px6, 4);
+        vuint8mf2_t q2 = __riscv_vget_v_u8mf2x6_u8mf2(px6, 5);
 
         vuint8mf2_t p1_dst, p0_dst, q0_dst, q1_dst;
         luma_core(&p1_dst, &p0_dst, &q0_dst, &q1_dst, p2, p1, p0, q0, q1, q2, tc8, alpha, beta, vl);
 
-        __riscv_vssseg4e8_v_u8mf2(p_iter - 2, stride, p1_dst, p0_dst, q0_dst, q1_dst, 16);
+        vuint8mf2x4_t dstx4;
+        dstx4 = __riscv_vset_v_u8mf2_u8mf2x4(dstx4, 0, p1_dst);
+        dstx4 = __riscv_vset_v_u8mf2_u8mf2x4(dstx4, 1, p0_dst);
+        dstx4 = __riscv_vset_v_u8mf2_u8mf2x4(dstx4, 2, q0_dst);
+        dstx4 = __riscv_vset_v_u8mf2_u8mf2x4(dstx4, 3, q1_dst);
+
+        __riscv_vssseg4e8_v_u8mf2x4(p_iter - 2, stride, dstx4, 16);
 
         count -= vl;
         tc_offset = tc_offset + vl;
         p_iter = p_iter + vl * stride;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void chroma_core(vuint8mf2_t *p_p0_dst, vuint8mf2_t *p_q0_dst,
@@ -241,7 +243,7 @@ __attribute__((always_inline)) static void chroma_core(vuint8mf2_t *p_p0_dst, vu
     vint16m1_t sub_p1_q1 = __riscv_vsub_vv_i16m1(p1_i16, q1_i16, vl);
     vint16m1_t delta = __riscv_vsll_vx_i16m1(sub_q0_p0, 2, vl);
     delta = __riscv_vadd_vv_i16m1(delta, sub_p1_q1, vl);
-    delta = __riscv_vssra_vx_i16m1(delta, 3, vl);
+    delta = __riscv_vssra_vx_i16m1(delta, 3, __RISCV_FRM_RNE, vl);
     delta = __riscv_vmin_vv_i16m1(delta, tc, vl);
     delta = __riscv_vmax_vv_i16m1(delta, __riscv_vrsub_vx_i16m1(tc, 0, vl), vl);
 
@@ -250,17 +252,14 @@ __attribute__((always_inline)) static void chroma_core(vuint8mf2_t *p_p0_dst, vu
     p0_new_i16 = __riscv_vmax_vx_i16m1(p0_new_i16, 0, vl);
     q0_new_i16 = __riscv_vmax_vx_i16m1(q0_new_i16, 0, vl);
 
-    *p_p0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, p0, __riscv_vreinterpret_v_i16m1_u16m1(p0_new_i16), 0, vl);
-    *p_q0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, q0, __riscv_vreinterpret_v_i16m1_u16m1(q0_new_i16), 0, vl);
+    *p_p0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, p0, __riscv_vreinterpret_v_i16m1_u16m1(p0_new_i16), 0, __RISCV_FRM_RNE, vl);
+    *p_q0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, q0, __riscv_vreinterpret_v_i16m1_u16m1(q0_new_i16), 0, __RISCV_FRM_RNE, vl);
 }
 
 __attribute__((always_inline)) static void v_loop_filter_chroma(uint8_t *p_pix, ptrdiff_t stride,
                                                                 int width, int alpha, int beta, int8_t *p_tc0)
 {
     uint8_t *p_iter = p_pix;
-
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
 
     int count = width;
     int tc_offset = 0;
@@ -287,17 +286,12 @@ __attribute__((always_inline)) static void v_loop_filter_chroma(uint8_t *p_pix, 
         tc_offset += vl;
         p_iter = p_iter + vl;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h_loop_filter_chroma(uint8_t *p_pix, ptrdiff_t stride,
                                                                 int width, int alpha, int beta, int8_t *p_tc0)
 {
     uint8_t *p_iter = p_pix;
-
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
 
     int count = width;
     int tc_offset = 0;
@@ -309,20 +303,24 @@ __attribute__((always_inline)) static void h_loop_filter_chroma(uint8_t *p_pix, 
         vint8mf2_t tc8;
         extend_tc0_2(&tc8, p_tc0, tc_offset, vl);
 
-        vuint8mf2_t p1, p0, q0, q1;
-        __riscv_vlsseg4e8_v_u8mf2(&p1, &p0, &q0, &q1, p_iter - 2, stride, vl);
+        vuint8mf2x4_t px4 = __riscv_vlsseg4e8_v_u8mf2x4(p_iter - 2, stride, vl);
+        vuint8mf2_t p1 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 0);
+        vuint8mf2_t p0 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 1);
+        vuint8mf2_t q0 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 2);
+        vuint8mf2_t q1 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 3);
 
         vuint8mf2_t p0_dst, q0_dst;
         chroma_core(&p0_dst, &q0_dst, p1, p0, q0, q1, tc8, alpha, beta, vl);
 
-        __riscv_vssseg2e8_v_u8mf2(p_iter - 1, stride, p0_dst, q0_dst, vl);
+        vuint8mf2x2_t dstx2;
+        dstx2 = __riscv_vset_v_u8mf2_u8mf2x2(dstx2, 0, p0_dst);
+        dstx2 = __riscv_vset_v_u8mf2_u8mf2x2(dstx2, 1, q0_dst);
+        __riscv_vssseg2e8_v_u8mf2x2(p_iter - 1, stride, dstx2, vl);
 
         count -= vl;
         tc_offset = tc_offset + vl;
         p_iter = p_iter + vl * stride;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void luma_intra_core(vuint8mf2_t *p_p2_dst, vuint8mf2_t *p_p1_dst,
@@ -402,14 +400,14 @@ __attribute__((always_inline)) static void luma_intra_core(vuint8mf2_t *p_p2_dst
         cond3 = __riscv_vmand_mm_b16(cond3, cond2, vl);
         cond4 = __riscv_vmand_mm_b16(cond4, cond2, vl);
 
-        vuint8mf2_t p0_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p0_new1_i16), 2, vl);
-        vuint8mf2_t p0_new2_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p0_new2_i16), 3, vl);
-        vuint8mf2_t p1_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p1_new1_i16), 2, vl);
-        vuint8mf2_t p2_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p2_new1_i16), 3, vl);
-        vuint8mf2_t q0_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q0_new1_i16), 2, vl);
-        vuint8mf2_t q0_new2_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q0_new2_i16), 3, vl);
-        vuint8mf2_t q1_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q1_new1_i16), 2, vl);
-        vuint8mf2_t q2_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q2_new1_i16), 3, vl);
+        vuint8mf2_t p0_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p0_new1_i16), 2, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t p0_new2_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p0_new2_i16), 3, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t p1_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p1_new1_i16), 2, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t p2_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(p2_new1_i16), 3, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t q0_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q0_new1_i16), 2, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t q0_new2_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q0_new2_i16), 3, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t q1_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q1_new1_i16), 2, __RISCV_FRM_RNE, vl);
+        vuint8mf2_t q2_new1_u8 = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(q2_new1_i16), 3, __RISCV_FRM_RNE, vl);
 
         *p_p1_dst = __riscv_vmerge_vvm_u8mf2(p1, p1_new1_u8, cond3, vl);
         *p_p2_dst = __riscv_vmerge_vvm_u8mf2(p2, p2_new1_u8, cond3, vl);
@@ -426,9 +424,6 @@ __attribute__((always_inline)) static void v_loop_filter_luma_intra(uint8_t *p_p
                                                                     int width, int alpha, int beta)
 {
     uint8_t *p_iter = p_pix;
-
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
 
     int count = width;
 
@@ -460,8 +455,6 @@ __attribute__((always_inline)) static void v_loop_filter_luma_intra(uint8_t *p_p
         count -= vl;
         p_iter = p_iter + vl;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h_loop_filter_luma_intra(uint8_t *p_pix, ptrdiff_t stride,
@@ -469,32 +462,40 @@ __attribute__((always_inline)) static void h_loop_filter_luma_intra(uint8_t *p_p
 {
     uint8_t *p_iter = p_pix;
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
-
     int count = width;
 
     while (count > 0)
     {
         int vl = __riscv_vsetvl_e8mf2(width);
 
-        vuint8mf2_t p3, p2, p1, p0, q0, q1, q2, q3;
-        __riscv_vlsseg8e8_v_u8mf2(&p3, &p2, &p1, &p0,
-                          &q0, &q1, &q2, &q3, p_iter - 4, stride, 16);
+        vuint8mf2x8_t px8 = __riscv_vlsseg8e8_v_u8mf2x8(p_iter - 4, stride, 16);
+        vuint8mf2_t p3 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 0);
+        vuint8mf2_t p2 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 1);
+        vuint8mf2_t p1 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 2);
+        vuint8mf2_t p0 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 3);
+        vuint8mf2_t q0 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 4);
+        vuint8mf2_t q1 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 5);
+        vuint8mf2_t q2 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 6);
+        vuint8mf2_t q3 = __riscv_vget_v_u8mf2x8_u8mf2(px8, 7);
 
         vuint8mf2_t p2_dst, p1_dst, p0_dst, q0_dst, q1_dst, q2_dst;
 
         luma_intra_core(&p2_dst, &p1_dst, &p0_dst, &q0_dst, &q1_dst, &q2_dst,
                         p3, p2, p1, p0, q0, q1, q2, q3, alpha, beta, vl);
 
-        __riscv_vssseg6e8_v_u8mf2(p_iter - 3, stride,
-                          p2_dst, p1_dst, p0_dst, q0_dst, q1_dst, q2_dst, 16);
+        vuint8mf2x6_t dstx6;
+        dstx6 = __riscv_vset_v_u8mf2_u8mf2x6(dstx6, 0, p2_dst);
+        dstx6 = __riscv_vset_v_u8mf2_u8mf2x6(dstx6, 1, p1_dst);
+        dstx6 = __riscv_vset_v_u8mf2_u8mf2x6(dstx6, 2, p0_dst);
+        dstx6 = __riscv_vset_v_u8mf2_u8mf2x6(dstx6, 3, q0_dst);
+        dstx6 = __riscv_vset_v_u8mf2_u8mf2x6(dstx6, 4, q1_dst);
+        dstx6 = __riscv_vset_v_u8mf2_u8mf2x6(dstx6, 5, q2_dst);
+
+        __riscv_vssseg6e8_v_u8mf2x6(p_iter - 3, stride, dstx6, 16);
 
         count -= vl;
         p_iter = p_iter + vl * stride;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void chroma_intra_core(vuint8mf2_t *p_p0_dst, vuint8mf2_t *p_q0_dst,
@@ -528,17 +529,14 @@ __attribute__((always_inline)) static void chroma_intra_core(vuint8mf2_t *p_p0_d
     p0_new1_i16 = __riscv_vmacc_vx_i16m1(p0_new1_i16, 2, p1_i16, vl);
     q0_new1_i16 = __riscv_vmacc_vx_i16m1(q0_new1_i16, 2, q1_i16, vl);
 
-    *p_p0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, p0, __riscv_vreinterpret_v_i16m1_u16m1(p0_new1_i16), 2, vl);
-    *p_q0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, q0, __riscv_vreinterpret_v_i16m1_u16m1(q0_new1_i16), 2, vl);
+    *p_p0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, p0, __riscv_vreinterpret_v_i16m1_u16m1(p0_new1_i16), 2, __RISCV_FRM_RNE, vl);
+    *p_q0_dst = __riscv_vnclipu_wx_u8mf2_mu(cond13, q0, __riscv_vreinterpret_v_i16m1_u16m1(q0_new1_i16), 2, __RISCV_FRM_RNE, vl);
 }
 
 __attribute__((always_inline)) static void v_loop_filter_chroma_intra(uint8_t *p_pix, ptrdiff_t stride,
                                                                       int width, int alpha, int beta)
 {
     uint8_t *p_iter = p_pix;
-
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
 
     int count = width;
 
@@ -560,8 +558,6 @@ __attribute__((always_inline)) static void v_loop_filter_chroma_intra(uint8_t *p
         count -= vl;
         p_iter = p_iter + vl;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h_loop_filter_chroma_intra(uint8_t *p_pix, ptrdiff_t stride,
@@ -569,28 +565,29 @@ __attribute__((always_inline)) static void h_loop_filter_chroma_intra(uint8_t *p
 {
     uint8_t *p_iter = p_pix;
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
-
     int count = width;
 
     while (count > 0)
     {
         int vl = __riscv_vsetvl_e8mf2(width);
 
-        vuint8mf2_t p1, p0, q0, q1;
-        __riscv_vlsseg4e8_v_u8mf2(&p1, &p0, &q0, &q1, p_iter - 2, stride, vl);
+        vuint8mf2x4_t px4 = __riscv_vlsseg4e8_v_u8mf2x4(p_iter - 2, stride, vl);
+        vuint8mf2_t p1 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 0);
+        vuint8mf2_t p0 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 1);
+        vuint8mf2_t q0 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 2);
+        vuint8mf2_t q1 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 3);
 
         vuint8mf2_t p0_dst, q0_dst;
         chroma_intra_core(&p0_dst, &q0_dst, p1, p0, q0, q1, alpha, beta, vl);
 
-        __riscv_vssseg2e8_v_u8mf2(p_iter - 1, stride, p0_dst, q0_dst, vl);
+        vuint8mf2x2_t dstx2;
+        dstx2 = __riscv_vset_v_u8mf2_u8mf2x2(dstx2, 0, p0_dst);
+        dstx2 = __riscv_vset_v_u8mf2_u8mf2x2(dstx2, 1, q0_dst);
+        __riscv_vssseg2e8_v_u8mf2x2(p_iter - 1, stride, dstx2, vl);
 
         count -= vl;
         p_iter = p_iter + vl * stride;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 __attribute__((always_inline)) static void h_loop_filter_chroma_mbaff_intra(uint8_t *p_pix, ptrdiff_t stride,
@@ -598,28 +595,29 @@ __attribute__((always_inline)) static void h_loop_filter_chroma_mbaff_intra(uint
 {
     uint8_t *p_iter = p_pix;
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
-
     int count = width;
 
     while (count > 0)
     {
         int vl = __riscv_vsetvl_e8mf2(count);
 
-        vuint8mf2_t p1, p0, q0, q1;
-        __riscv_vlsseg4e8_v_u8mf2(&p1, &p0, &q0, &q1, p_iter - 2, stride, vl);
+        vuint8mf2x4_t px4 = __riscv_vlsseg4e8_v_u8mf2x4(p_iter - 2, stride, vl);
+        vuint8mf2_t p1 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 0);
+        vuint8mf2_t p0 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 1);
+        vuint8mf2_t q0 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 2);
+        vuint8mf2_t q1 = __riscv_vget_v_u8mf2x4_u8mf2(px4, 3);                        
 
         vuint8mf2_t p0_dst, q0_dst;
         chroma_intra_core(&p0_dst, &q0_dst, p1, p0, q0, q1, alpha, beta, vl);
 
-        __riscv_vssseg2e8_v_u8mf2(p_iter - 1, stride, p0_dst, q0_dst, vl);
+        vuint8mf2x2_t dstx2;
+        dstx2 = __riscv_vset_v_u8mf2_u8mf2x2(dstx2, 0, p0_dst);
+        dstx2 = __riscv_vset_v_u8mf2_u8mf2x2(dstx2, 1, q0_dst);
+        __riscv_vssseg2e8_v_u8mf2x2(p_iter - 1, stride, dstx2, vl);
 
         count -= vl;
         p_iter = p_iter + vl * stride;
     }
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 void h264_v_loop_filter_luma_8_rvv(uint8_t *pix, ptrdiff_t stride, int alpha, int beta, int8_t *p_tc0)

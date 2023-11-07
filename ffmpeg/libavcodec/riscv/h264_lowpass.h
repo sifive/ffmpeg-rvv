@@ -49,8 +49,8 @@ __attribute__((always_inline)) static void v_lowpass_u8m1(vuint8m1_t *p_dst0, vu
     dst0 = __riscv_vreinterpret_v_i16m2_u16m2(dst0_s);
     dst1 = __riscv_vreinterpret_v_i16m2_u16m2(dst1_s);
 
-    *p_dst0 = __riscv_vnclipu_wx_u8m1(dst0, 5, vl);
-    *p_dst1 = __riscv_vnclipu_wx_u8m1(dst1, 5, vl);
+    *p_dst0 = __riscv_vnclipu_wx_u8m1(dst0, 5, __RISCV_FRM_RNE, vl);
+    *p_dst1 = __riscv_vnclipu_wx_u8m1(dst1, 5, __RISCV_FRM_RNE, vl);
 }
 
 __attribute__((always_inline)) static void v_lowpass_u32m2(vuint32m2_t *p_dst0, vuint32m2_t *p_dst1, vint16m1_t *p_row0, vint16m1_t *p_row1,
@@ -193,11 +193,11 @@ __attribute__((always_inline)) static void h_lowpass_u8m1_l2src(vuint8m1_t *p_ds
     dst0_u = __riscv_vreinterpret_v_i16m2_u16m2(dst0_s);
     dst1_u = __riscv_vreinterpret_v_i16m2_u16m2(dst1_s);
 
-    *p_dst0 = __riscv_vnclipu_wx_u8m1(dst0_u, 5, vl);
-    *p_dst1 = __riscv_vnclipu_wx_u8m1(dst1_u, 5, vl);
+    *p_dst0 = __riscv_vnclipu_wx_u8m1(dst0_u, 5, __RISCV_FRM_RNE, vl);
+    *p_dst1 = __riscv_vnclipu_wx_u8m1(dst1_u, 5, __RISCV_FRM_RNE, vl);
 
-    *p_dst0 = __riscv_vaaddu_vv_u8m1(*p_dst0, row02, vl);
-    *p_dst1 = __riscv_vaaddu_vv_u8m1(*p_dst1, row12, vl);
+    *p_dst0 = __riscv_vaaddu_vv_u8m1(*p_dst0, row02, __RISCV_FRM_RNE, vl);
+    *p_dst1 = __riscv_vaaddu_vv_u8m1(*p_dst1, row12, __RISCV_FRM_RNE, vl);
 }
 
 __attribute__((always_inline)) static void h_lowpass_u8m1_l2src_shift(vuint8m1_t *p_dst0, vuint8m1_t *p_dst1, const uint8_t **pp_src, ptrdiff_t stride, int vl)
@@ -240,10 +240,10 @@ __attribute__((always_inline)) static void h_lowpass_u8m1_l2src_shift(vuint8m1_t
     dst0_u = __riscv_vreinterpret_v_i16m2_u16m2(dst0_s);
     dst1_u = __riscv_vreinterpret_v_i16m2_u16m2(dst1_s);
 
-    *p_dst0 = __riscv_vnclipu_wx_u8m1(dst0_u, 5, vl);
-    *p_dst1 = __riscv_vnclipu_wx_u8m1(dst1_u, 5, vl);
+    *p_dst0 = __riscv_vnclipu_wx_u8m1(dst0_u, 5, __RISCV_FRM_RNE, vl);
+    *p_dst1 = __riscv_vnclipu_wx_u8m1(dst1_u, 5, __RISCV_FRM_RNE, vl);
 
-    *p_dst0 = __riscv_vaaddu_vv_u8m1(*p_dst0, row03, vl);
-    *p_dst1 = __riscv_vaaddu_vv_u8m1(*p_dst1, row13, vl);
+    *p_dst0 = __riscv_vaaddu_vv_u8m1(*p_dst0, row03, __RISCV_FRM_RNE, vl);
+    *p_dst1 = __riscv_vaaddu_vv_u8m1(*p_dst1, row13, __RISCV_FRM_RNE, vl);
 }
 #endif

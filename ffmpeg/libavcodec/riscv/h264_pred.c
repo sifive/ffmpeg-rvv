@@ -66,7 +66,17 @@ void pred8x8_hor_8_rvv(uint8_t *p_src, ptrdiff_t stride)
         int vl = __riscv_vsetvl_e8m1(width);
         vuint8m1_t left = __riscv_vlse8_v_u8m1(p_src_iter - 1, stride, width);
 
-        __riscv_vssseg8e8_v_u8m1(p_src_iter, stride, left, left, left, left, left, left, left, left, width);
+        vuint8m1x8_t leftx8;
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 0, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 1, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 2, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 3, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 4, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 5, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 6, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 7, left);
+
+        __riscv_vssseg8e8_v_u8m1x8(p_src_iter, stride, leftx8, width);
 
         width -= vl;
         p_src_iter = p_src_iter + vl * stride;
@@ -120,8 +130,6 @@ void pred8x8_plane_8_rvv(uint8_t *p_src, ptrdiff_t stride)
     // linear combination of H, V, and src
     int32_t a = ((p_src[7 * stride - 1] + p_src[-stride + 7] + 1) << 4) - (3 * (v_sum_scalar + h_sum_scalar));
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_DOWNWARD);
 
     vint16m1_t weight2 = __riscv_vle16_v_i16m1(weight2_data, 8);
     vint16m1_t h_weighted = __riscv_vmv_v_x_i16m1(h_sum_scalar, 8);
@@ -159,14 +167,14 @@ void pred8x8_plane_8_rvv(uint8_t *p_src, ptrdiff_t stride)
     result8 = __riscv_vmax_vx_i16m1(result8, 0, 8);
     a += v_sum_scalar;
 
-    vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 5, 8);
-    vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 5, 8);
-    vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 5, 8);
-    vuint8mf2_t result4_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result4), 5, 8);
-    vuint8mf2_t result5_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result5), 5, 8);
-    vuint8mf2_t result6_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result6), 5, 8);
-    vuint8mf2_t result7_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result7), 5, 8);
-    vuint8mf2_t result8_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result8), 5, 8);
+    vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result4_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result4), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result5_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result5), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result6_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result6), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result7_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result7), 5, __RISCV_FRM_RDN, 8);
+    vuint8mf2_t result8_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result8), 5, __RISCV_FRM_RDN, 8);
 
     __riscv_vse8_v_u8mf2(p_src_iter, result1_n, 8);
     p_src_iter += stride;
@@ -184,8 +192,6 @@ void pred8x8_plane_8_rvv(uint8_t *p_src, ptrdiff_t stride)
     p_src_iter += stride;
     __riscv_vse8_v_u8mf2(p_src_iter, result8_n, 8);
     p_src_iter += stride;
-
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 
 void pred8x8_128_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
@@ -219,14 +225,17 @@ void pred8x8_top_dc_rvv(uint8_t *p_src, ptrdiff_t stride)
 
     const uint8_t index_data[] = {0, 0, 0, 0, 1, 1, 1, 1};
 
-    vuint8m1_t top0, top1, top2, top3;
-    __riscv_vlseg4e8_v_u8m1(&top0, &top1, &top2, &top3, p_src - stride, 2);
+    vuint8m1x4_t topx4 = __riscv_vlseg4e8_v_u8m1x4(p_src - stride, 2);
+    vuint8m1_t top0 = __riscv_vget_v_u8m1x4_u8m1(topx4, 0);
+    vuint8m1_t top1 = __riscv_vget_v_u8m1x4_u8m1(topx4, 1);
+    vuint8m1_t top2 = __riscv_vget_v_u8m1x4_u8m1(topx4, 2);
+    vuint8m1_t top3 = __riscv_vget_v_u8m1x4_u8m1(topx4, 3);
 
     vuint16m2_t sum1 = __riscv_vwaddu_vv_u16m2(top0, top1, 2);
     vuint16m2_t sum2 = __riscv_vwaddu_vv_u16m2(top2, top3, 2);
     vuint16m2_t sum = __riscv_vadd_vv_u16m2(sum1, sum2, 2);
 
-    vuint8m1_t dc01 = __riscv_vnclipu_wx_u8m1(sum, 2, 2);
+    vuint8m1_t dc01 = __riscv_vnclipu_wx_u8m1(sum, 2, __RISCV_FRM_RNE, 2);
 
     vuint8m1_t index = __riscv_vle8_v_u8m1(index_data, 8);
     dc01 = __riscv_vrgather_vv_u8m1(dc01, index, 8);
@@ -352,8 +361,8 @@ void pred8x8_l0t_dc_rvv(uint8_t *p_src, ptrdiff_t stride)
     dc021 = __riscv_vadd_vv_u16m2(dc021, dc01 , 8);
 
     vuint8m1_t shift = __riscv_vle8_v_u8m1(shift_data, 8);
-    vuint8m1_t dc01_splat = __riscv_vnclipu_wx_u8m1(dc01, 2, 8);
-    vuint8m1_t dc021_splat = __riscv_vnclipu_wv_u8m1(dc021, shift, 8);
+    vuint8m1_t dc01_splat = __riscv_vnclipu_wx_u8m1(dc01, 2, __RISCV_FRM_RNE, 8);
+    vuint8m1_t dc021_splat = __riscv_vnclipu_wv_u8m1(dc021, shift, __RISCV_FRM_RNE, 8);
 
     vuint8m1_t index = __riscv_vle8_v_u8m1(index_data, 8);
     dc01_splat = __riscv_vrgather_vv_u8m1(dc01_splat, index, 8);
@@ -408,8 +417,8 @@ void pred8x8_0lt_dc_rvv(uint8_t *p_src, ptrdiff_t stride)
     dc23_sum = __riscv_vadd_vx_u16m2(dc23_sum, left2_sum , 8);
 
     vuint8m1_t shift = __riscv_vle8_v_u8m1(shift_data, 8);
-    vuint8m1_t dc01 = __riscv_vnclipu_wx_u8m1(top_sum, 2, 8);
-    vuint8m1_t dc23 = __riscv_vnclipu_wv_u8m1(dc23_sum, shift, 8);
+    vuint8m1_t dc01 = __riscv_vnclipu_wx_u8m1(top_sum, 2, __RISCV_FRM_RNE, 8);
+    vuint8m1_t dc23 = __riscv_vnclipu_wv_u8m1(dc23_sum, shift, __RISCV_FRM_RNE, 8);
 
     vuint8m1_t index = __riscv_vle8_v_u8m1(index_data, 8);
     dc01 = __riscv_vrgather_vv_u8m1(dc01, index, 8);
@@ -511,7 +520,6 @@ void pred16x16_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 {
     uint8_t *p_src_iter = p_src;
 
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
     vuint8m1_t left = __riscv_vlse8_v_u8m1(p_src_iter - 1, stride, 16);
     vuint8m1_t top = __riscv_vle8_v_u8m1(p_src_iter - stride, 16);
 
@@ -520,7 +528,7 @@ void pred16x16_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
     sum = __riscv_vwredsumu_vs_u8m1_u16m1(left, sum, 16);
     sum = __riscv_vwredsumu_vs_u8m1_u16m1(top, sum, 16);
 
-    vuint16m1_t sum_n = __riscv_vssrl_vx_u16m1(sum, 5, 8);
+    vuint16m1_t sum_n = __riscv_vssrl_vx_u16m1(sum, 5, __RISCV_FRM_RNE, 8);
     vuint8m1_t dc_splat = __riscv_vrgather_vx_u8m1(__riscv_vreinterpret_v_u16m1_u8m1(sum_n), 0, 16);
 
     __riscv_vse8_v_u8m1(p_src_iter, dc_splat, 16);
@@ -560,13 +568,12 @@ void pred16x16_left_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 {
     uint8_t *p_src_iter = p_src;
 
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
     vuint8m1_t left = __riscv_vlse8_v_u8m1(p_src_iter - 1, stride, 16);
 
     vuint16m1_t sum = __riscv_vand_vx_u16m1(sum, 0, 16);
     sum = __riscv_vwredsumu_vs_u8m1_u16m1(left, sum, 16);
 
-    vuint16m1_t dc = __riscv_vssrl_vx_u16m1(sum, 4, 8);
+    vuint16m1_t dc = __riscv_vssrl_vx_u16m1(sum, 4, __RISCV_FRM_RNE, 8);
     vuint8m1_t dc_splat = __riscv_vrgather_vx_u8m1(__riscv_vreinterpret_v_u16m1_u8m1(dc), 0, 16);
 
     __riscv_vse8_v_u8m1(p_src_iter, dc_splat, 16);
@@ -605,13 +612,12 @@ void pred16x16_left_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 void pred16x16_top_dc_8_rvv(uint8_t *p_src, ptrdiff_t stride)
 {
     uint8_t *p_src_iter = p_src;
-    __builtin_rvv_vsetvxrm(VE_TONEARESTUP);
     vuint8m1_t top = __riscv_vle8_v_u8m1(p_src_iter - stride, 16);
 
     vuint16m1_t sum = __riscv_vand_vx_u16m1(sum, 0, 16);
     sum = __riscv_vwredsumu_vs_u8m1_u16m1(top, sum, 16);
 
-    vuint16m1_t dc = __riscv_vssrl_vx_u16m1(sum, 4, 8);
+    vuint16m1_t dc = __riscv_vssrl_vx_u16m1(sum, 4, __RISCV_FRM_RNE, 8);
     vuint8m1_t dc_splat = __riscv_vrgather_vx_u8m1(__riscv_vreinterpret_v_u16m1_u8m1(dc), 0, 16);
 
     __riscv_vse8_v_u8m1(p_src_iter, dc_splat, 16);
@@ -755,8 +761,18 @@ void pred16x16_hor_8_rvv(uint8_t *p_src, ptrdiff_t stride)
         int vl = __riscv_vsetvl_e8m1(width);
         vuint8m1_t left = __riscv_vlse8_v_u8m1(p_src_iter - 1, stride, width);
 
-        __riscv_vssseg8e8_v_u8m1(p_src_iter, stride, left, left, left, left, left, left, left, left, width);
-        __riscv_vssseg8e8_v_u8m1(p_src_iter + 8, stride, left, left, left, left, left, left, left, left, width);
+        vuint8m1x8_t leftx8;
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 0, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 1, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 2, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 3, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 4, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 5, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 6, left);
+        leftx8 = __riscv_vset_v_u8m1_u8m1x8(leftx8, 7, left);
+
+        __riscv_vssseg8e8_v_u8m1x8(p_src_iter, stride, leftx8, width);
+        __riscv_vssseg8e8_v_u8m1x8(p_src_iter + 8, stride, leftx8, width);
 
         width -= vl;
         p_src_iter = p_src_iter + vl * stride;
@@ -811,8 +827,6 @@ void pred16x16_plane_8_rvv(uint8_t *p_src, ptrdiff_t stride)
     // linear combination of H, V, and src
     int32_t a = ((p_src[15 * stride - 1] + p_src[-stride + 15] + 1) << 4) - (7 * (v_sum_scalar + h_sum_scalar));
 
-    size_t vxrm = __builtin_rvv_vgetvxrm();
-    __builtin_rvv_vsetvxrm(VE_DOWNWARD);
 
     vint16m1_t weight2 = __riscv_vle16_v_i16m1(weight2_data, 16);
     vint16m1_t h_weighted = __riscv_vmv_v_x_i16m1(h_sum_scalar, 16);
@@ -852,14 +866,14 @@ void pred16x16_plane_8_rvv(uint8_t *p_src, ptrdiff_t stride)
         result8 = __riscv_vmax_vx_i16m1(result8, 0, 16);
         a += v_sum_scalar;
 
-        vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 5, 16);
-        vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 5, 16);
-        vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 5, 16);
-        vuint8mf2_t result4_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result4), 5, 16);
-        vuint8mf2_t result5_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result5), 5, 16);
-        vuint8mf2_t result6_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result6), 5, 16);
-        vuint8mf2_t result7_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result7), 5, 16);
-        vuint8mf2_t result8_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result8), 5, 16);
+        vuint8mf2_t result1_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result1), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result2_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result2), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result3_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result3), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result4_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result4), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result5_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result5), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result6_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result6), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result7_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result7), 5, __RISCV_FRM_RDN, 16);
+        vuint8mf2_t result8_n = __riscv_vnclipu_wx_u8mf2(__riscv_vreinterpret_v_i16m1_u16m1(result8), 5, __RISCV_FRM_RDN, 16);
 
         __riscv_vse8_v_u8mf2(p_src_iter, result1_n, 16);
         p_src_iter += stride;
@@ -879,6 +893,5 @@ void pred16x16_plane_8_rvv(uint8_t *p_src, ptrdiff_t stride)
         p_src_iter += stride;
     }
 
-    __builtin_rvv_vsetvxrm(vxrm);
 }
 #endif

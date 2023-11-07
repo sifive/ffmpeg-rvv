@@ -95,9 +95,9 @@ __attribute__((always_inline)) static void put_h264_qpel8_h_lowpass(uint8_t *p_d
             vuint16m2_t dst0_u, dst1_u;
             h_lowpass_u16m2(&dst0_u, &dst1_u, &p_src_iter, src_stride, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0_u, 5, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0_u, 5, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += dst_stride;
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1_u, 5, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1_u, 5, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += dst_stride;
         }
 
@@ -336,8 +336,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2(uint8_t *
 
         vuint8m1_t dst0, dst1;
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -356,8 +356,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2(uint8_t *
         p_l2_src += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -376,8 +376,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2(uint8_t *
         p_l2_src += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -396,8 +396,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2(uint8_t *
         p_l2_src += l2_stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, l2_row0, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, l2_row1, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -440,8 +440,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src(uint8_
 
         vuint8m1_t dst0, dst1;
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -455,8 +455,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src(uint8_
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row4, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row5, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row4, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row5, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -470,8 +470,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src(uint8_
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row6, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row0, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row6, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row0, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -485,8 +485,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src(uint8_
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row1, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row2, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row1, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row2, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -587,8 +587,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src_shift(
 
         vuint8m1_t dst0, dst1;
         v_lowpass_u8m1(&dst0, &dst1, row0, row1, row2, row3, row4, row5, row6, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row3, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row4, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row3, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row4, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -602,8 +602,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src_shift(
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row2, row3, row4, row5, row6, row0, row1, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row5, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row6, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row5, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row6, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -617,8 +617,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src_shift(
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row4, row5, row6, row0, row1, row2, row3, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row0, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row1, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row0, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row1, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;
@@ -632,8 +632,8 @@ __attribute__((always_inline)) static void put_h264_qpel8_v_lowpass_l2src_shift(
         p_src_iter += stride;
 
         v_lowpass_u8m1(&dst0, &dst1, row6, row0, row1, row2, row3, row4, row5, vl);
-        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, vl);
-        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, vl);
+        dst0 = __riscv_vaaddu_vv_u8m1(dst0, row2, __RISCV_FRM_RNE, vl);
+        dst1 = __riscv_vaaddu_vv_u8m1(dst1, row3, __RISCV_FRM_RNE, vl);
 
         __riscv_vse8_v_u8m1(p_dst_iter, dst0, vl);
         p_dst_iter += stride;

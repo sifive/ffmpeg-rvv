@@ -26,7 +26,7 @@ typedef unsigned char pixel;
 __attribute__((always_inline)) static void h264_put_chroma_unroll4(uint8_t *p_dst, const uint8_t *p_src, ptrdiff_t stride, int w, int h, int x, int y)
 {
     uint8_t *p_dst_iter = p_dst;
-    uint8_t *p_src_iter = p_src;
+    const uint8_t *p_src_iter = p_src;
 
     const int xy = x * y;
     const int x8 = x << 3;
@@ -97,16 +97,16 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll4(uint8_t *p_ds
             row41 = __riscv_vslidedown_vx_u8m1(row40, 1, vl + 1);
             dst3 = __riscv_vwmaccu_vx_u16m2(dst3, d, row41, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -138,16 +138,16 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll4(uint8_t *p_ds
             vuint16m2_t dst3 = __riscv_vwmulu_vx_u16m2(row3, a, vl);
             dst3 = __riscv_vwmaccu_vx_u16m2(dst3, e, row4, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -197,16 +197,16 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll4(uint8_t *p_ds
             vuint16m2_t dst3 = __riscv_vwmulu_vx_u16m2(row30, a, vl);
             dst3 = __riscv_vwmaccu_vx_u16m2(dst3, e, row31, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -230,16 +230,16 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll4(uint8_t *p_ds
             p_src_iter += stride;
             vuint16m2_t dst3 = __riscv_vwmulu_vx_u16m2(row3, a, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -293,10 +293,10 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll2(uint8_t *p_ds
             row21 = __riscv_vslidedown_vx_u8m1(row20, 1, vl + 1);
             dst1 = __riscv_vwmaccu_vx_u16m2(dst1, d, row21, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -319,10 +319,10 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll2(uint8_t *p_ds
             dst1 = __riscv_vwmaccu_vx_u16m2(dst1, e, row2, vl);
             p_src_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -352,10 +352,10 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll2(uint8_t *p_ds
             vuint16m2_t dst1 = __riscv_vwmulu_vx_u16m2(row10, a, vl);
             dst1 = __riscv_vwmaccu_vx_u16m2(dst1, e, row11, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -371,10 +371,10 @@ __attribute__((always_inline)) static void h264_put_chroma_unroll2(uint8_t *p_ds
             p_src_iter += stride;
             vuint16m2_t dst1 = __riscv_vwmulu_vx_u16m2(row1, a, vl);
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
 
-            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, vl), vl);
+            __riscv_vse8_v_u8m1(p_dst_iter, __riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), vl);
             p_dst_iter += stride;
         }
     }
@@ -454,19 +454,19 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll4(uint8_t *p_ds
             row41 = __riscv_vslidedown_vx_u8m1(row40, 1, vl + 1);
             dst3 = __riscv_vwmaccu_vx_u16m2(dst3, d, row41, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg2, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg3, vl);
             p_dst_iter += stride;
         }
@@ -499,19 +499,19 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll4(uint8_t *p_ds
             vuint16m2_t dst3 = __riscv_vwmulu_vx_u16m2(row3, a, vl);
             dst3 = __riscv_vwmaccu_vx_u16m2(dst3, e, row4, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg2, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg3, vl);
             p_dst_iter += stride;
         }
@@ -562,19 +562,19 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll4(uint8_t *p_ds
             vuint16m2_t dst3 = __riscv_vwmulu_vx_u16m2(row30, a, vl);
             dst3 = __riscv_vwmaccu_vx_u16m2(dst3, e, row31, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg2, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg3, vl);
             p_dst_iter += stride;
         }
@@ -599,19 +599,19 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll4(uint8_t *p_ds
             p_src_iter += stride;
             vuint16m2_t dst3 = __riscv_vwmulu_vx_u16m2(row3, a, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg2 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst2, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg2, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg3 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst3, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg3, vl);
             p_dst_iter += stride;
         }
@@ -666,11 +666,11 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll2(uint8_t *p_ds
             row21 = __riscv_vslidedown_vx_u8m1(row20, 1, vl + 1);
             dst1 = __riscv_vwmaccu_vx_u16m2(dst1, d, row21, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
         }
@@ -694,11 +694,11 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll2(uint8_t *p_ds
             dst1 = __riscv_vwmaccu_vx_u16m2(dst1, e, row2, vl);
             p_src_iter += stride;
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
         }
@@ -729,11 +729,11 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll2(uint8_t *p_ds
             vuint16m2_t dst1 = __riscv_vwmulu_vx_u16m2(row10, a, vl);
             dst1 = __riscv_vwmaccu_vx_u16m2(dst1, e, row11, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
         }
@@ -750,11 +750,11 @@ __attribute__((always_inline)) static void h264_avg_chroma_unroll2(uint8_t *p_ds
             p_src_iter += stride;
             vuint16m2_t dst1 = __riscv_vwmulu_vx_u16m2(row1, a, vl);
 
-            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg0 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst0, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg0, vl);
             p_dst_iter += stride;
 
-            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), vl);
+            vuint8m1_t avg1 = __riscv_vaaddu_vv_u8m1(__riscv_vnclipu_wx_u8m1(dst1, 6, __RISCV_FRM_RNE, vl), __riscv_vle8_v_u8m1(p_dst_iter, vl), __RISCV_FRM_RNE, vl);
             __riscv_vse8_v_u8m1(p_dst_iter, avg1, vl);
             p_dst_iter += stride;
         }
